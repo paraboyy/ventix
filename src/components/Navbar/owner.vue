@@ -6,9 +6,6 @@
       </a>
 
       <div class="d-flex">
-        <button class="btn btn-pilih mx-4">
-          <router-link class="decoration-none text-light" to="/create/event">+ Create Event</router-link>
-        </button>
         <div class="d-flex align-items-center">
           <img src="https://via.placeholder.com/40" class="rounded-circle mx-2" alt="Profile Picture" />
           <a href="#" class="text-light decoration-none" @click="toggleDropdown">{{ userName || "Username" }}</a>

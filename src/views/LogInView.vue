@@ -9,8 +9,8 @@
         <!-- <p class="text-muted">Create an account</p> -->
         <form @submit.prevent="handleLogin">
           <div class="mb-3">
-            <label for="email" class="form-label">Username</label>
-            <input type="username" class="form-control" id="email" placeholder="example.email@gmail.com" v-model="email" required />
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" placeholder="Username" v-model="username" required />
           </div>
           <div class="mb-3">
             <label for="password" class="form-label">Password</label>
@@ -29,15 +29,15 @@
             <button type="submit" class="btn btn-warning fw-bold">Login</button>
           </div>
         </form>
-        <!-- <div class="text-center my-3">
-          <span class="text-muted">Or sign up with</span>
+        <div class="text-center my-3">
+          <span class="text-muted">Or Login with</span>
           <div class="d-flex justify-content-center mt-2">
             <button class="btn btn-light rounded-circle me-2"><i class="bi bi-google"></i></button>
             <button class="btn btn-light rounded-circle"><i class="bi bi-facebook"></i></button>
           </div>
-        </div> -->
+        </div>
         <div class="text-center">
-          <span class="text-muted">Belum memiliki account? <a href="#" class="text-warning text-decoration-none">Signup</a></span>
+          <span class="text-muted">Belum memiliki account? <a href="/signup" class="text-warning text-decoration-none">Signup</a></span>
         </div>
       </div>
     </div>
@@ -46,44 +46,85 @@
 
 <script>
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 export default {
   data() {
     return {
-      email: "",
+      username: "",
       password: "",
     };
   },
   methods: {
     async handleLogin(event) {
-      event.preventDefault(); // Mencegah submit form default
+      event.preventDefault();
       try {
-        const response = await axios.post("api-token/token", {
-          username: this.email,
-          password: this.password,
+        // Buat objek FormData
+        const formData = new FormData();
+        formData.append("username", this.username);
+        formData.append("password", this.password);
+
+        // Kirim permintaan POST dengan FormData
+        const response = await axios.post("token", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data", // Pastikan header sesuai dengan form-data
+          },
         });
+
         // Menyimpan token atau data login
-        const { access_token, token_type } = response.data;
+        const { access_token } = response.data;
         localStorage.setItem("token", access_token);
-        localStorage.setItem("token type", token_type);
-        // console.log("Login berhasil:", token_type);
-        alert("Login berhasil!");
-        // Arahkan pengguna ke halaman berikutnya
-        this.$router.push("/dashboard");
+
+        // Decode token JWT untuk mendapatkan data role
+        const decodedToken = jwtDecode(access_token);
+        const userRole = decodedToken.role;
+
+        localStorage.setItem("username", decodedToken.sub);
+
+        // Menampilkan SweetAlert berdasarkan hasil login
+        Swal.fire({
+          icon: "success",
+          title: "Login Berhasil",
+          text: "Anda berhasil login!",
+          confirmButtonText: "OK",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Arahkan pengguna berdasarkan role setelah menekan tombol OK
+            if (userRole === "participant") {
+              this.$router.push("/home");
+            } else if (userRole === "owner") {
+              this.$router.push("/dashboard-owner");
+            } else if (userRole === "organizer") {
+              this.$router.push("/dashboard-organizer");
+            } else {
+              // Jika role tidak dikenali, arahkan ke halaman default
+              this.$router.push("/");
+            }
+          }
+        });
       } catch (error) {
-        // Menangani error lebih detail
+        // Tangani error dengan SweetAlert
         if (error.response) {
-          // Jika server memberikan respons error (status code selain 2xx)
           console.error("Error login:", error.response.data);
-          alert("Login gagal! " + (error.response.data.message || "Periksa kembali email dan password Anda."));
+          Swal.fire({
+            icon: "error",
+            title: "Login Gagal",
+            text: error.response.data.message || "Periksa kembali email dan password Anda.",
+          });
         } else if (error.request) {
-          // Jika permintaan dikirim tetapi tidak ada respons
           console.error("No response from server:", error.request);
-          alert("Tidak ada respons dari server. Coba lagi nanti.");
+          Swal.fire({
+            icon: "error",
+            title: "Tidak Ada Respons",
+            text: "Tidak ada respons dari server. Coba lagi nanti.",
+          });
         } else {
-          // Error yang terjadi saat mengatur permintaan
           console.error("Error setup request:", error.message);
-          alert("Terjadi kesalahan saat mengirim permintaan. Coba lagi.");
+          Swal.fire({
+            icon: "error",
+            title: "Terjadi Kesalahan",
+            text: "Terjadi kesalahan saat mengirim permintaan. Coba lagi.",
+          });
         }
       }
     },

@@ -14,18 +14,23 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/api-token": {
+      "/token": {
         target: "https://intero-gateway-production.up.railway.app",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api-token/, ""),
       },
-      "/api2": {
-        target: "https://another-api.example.com",
+      "/events": {
+        target: "https://ventix-event-production.up.railway.app/api/v1",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api2/, ""),
       },
-      "/api3": {
-        target: "https://yet-another-api.example.com",
+      "/images": {
+        target: "https://intero.nibdo.dev/api/v1/cms",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api3/, ""),
+      },
+      "/register": {
+        target: "https://intero-gateway-production.up.railway.app",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api3/, ""),
       },

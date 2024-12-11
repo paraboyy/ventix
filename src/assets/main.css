@@ -47,6 +47,13 @@ footer a:hover {
   justify-self: center;
 }
 
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1000;
+}
+
 .search-container {
   background: white;
   border-radius: 5px;
@@ -184,11 +191,11 @@ footer a:hover {
   font-weight: bold;
 }
 
-.hover-light{
+.hover-light {
   color: #f4b400;
 }
 
-.hover-warning{
+.hover-warning {
   color: white;
 }
 
@@ -204,7 +211,7 @@ footer a:hover {
   border: none;
 }
 
-.btn-hover:hover{
+.btn-hover:hover {
   background-color: #f4b400;
 }
 

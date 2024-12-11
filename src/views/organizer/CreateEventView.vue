@@ -1,5 +1,16 @@
 <script setup>
 import Navbar from "../../components/Navbar/createEvent.vue";
+
+function toggleFields() {
+  const paidFields = document.getElementById("paidFields");
+  const isFree = document.getElementById("free").checked;
+  if (isFree) {
+    paidFields.style.display = "none";
+  } else {
+    paidFields.style.display = "block";
+  }
+}
+document.addEventListener("DOMContentLoaded", toggleFields);
 </script>
 
 <template>
@@ -142,25 +153,27 @@ import Navbar from "../../components/Navbar/createEvent.vue";
               <div class="row mb-3">
                 <div class="col-md-6">
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="ticketType" id="paid" checked />
+                    <input class="form-check-input" type="radio" name="ticketType" id="paid" checked onchange="toggleFields()" />
                     <label class="form-check-label" for="paid">Paid</label>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="ticketType" id="free" />
+                    <input class="form-check-input" type="radio" name="ticketType" id="free" onchange="toggleFields()" />
                     <label class="form-check-label" for="free">Free</label>
                   </div>
                 </div>
               </div>
-              <div class="row mb-3">
-                <div class="col-md-6">
-                  <label for="quantity" class="form-label">Quantity</label>
-                  <input type="number" class="form-control" id="quantity" placeholder="Enter quantity" value="200" />
-                </div>
-                <div class="col-md-6">
-                  <label for="price" class="form-label">Price $</label>
-                  <input type="number" class="form-control" id="price" placeholder="Enter price" value="90" />
+              <div id="paidFields">
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="quantity" class="form-label">Quantity</label>
+                    <input type="number" class="form-control" id="quantity" placeholder="Enter quantity" value="200" />
+                  </div>
+                  <div class="col-md-6">
+                    <label for="price" class="form-label">Price $</label>
+                    <input type="number" class="form-control" id="price" placeholder="Enter price" value="90" />
+                  </div>
                 </div>
               </div>
               <h4 class="mb-3">Sale date</h4>

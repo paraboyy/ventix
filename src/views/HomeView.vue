@@ -15,13 +15,16 @@ import FooterView from "../components/footer.vue";
       </a>
 
       <div class="d-flex">
-        <button class="btn btn-light mx-1">Create Event</button>
         <button class="btn btn-light mx-1">
-          <router-link class="decoration-none text-black" to="/login">LogIn</router-link>
+          <router-link class="decoration-none text-dark fw-bold" to="/organizer-signup">+ Create Event</router-link>
+
         </button>
         <button class="btn btn-pilih mx-1">
-          <router-link class="decoration-none text-light" to="/signup">Sign Up</router-link>
+          <router-link class="decoration-none fw-bold text-light" to="/login">LogIn</router-link>
         </button>
+        <!-- <button class="btn btn-pilih mx-1">
+          <router-link class="decoration-none text-light" to="/signup">Sign Up</router-link>
+        </button> -->
       </div>
     </div>
   </nav>

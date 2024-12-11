@@ -3,7 +3,7 @@
     <div class="container vh-100 d-flex justify-content-center align-items-center">
       <div class="card bg-secondary text-white shadow-lg p-4 W-35" style="border-radius: 15px">
         <div class="d-flex justify-content-between">
-          <h4 class="fw-bold">Sign Up</h4>
+          <h4 class="fw-bold">Create Events</h4>
           <button class="btn-close btn-close-white" aria-label="Close"></button>
         </div>
         <form @submit.prevent="handleRegister">
@@ -50,7 +50,7 @@ export default {
       username: "",
       email: "",
       password: "",
-      role: "participant",
+      role: "organizer",
       passwordVisible: false,
     };
   },

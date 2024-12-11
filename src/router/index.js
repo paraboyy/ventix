@@ -12,6 +12,11 @@ import EventsView from "../views/participan/EventsView.vue";
 import HomeOrganizer from "../views/organizer/HomeView.vue";
 import MyEventsView from "../views/organizer/MyEventsView.vue";
 import CreateEvent from "../views/organizer/CreateEventView.vue";
+import SignUpOrganizer from "../views/organizer/SignUpView.vue";
+
+//OWNER
+import HomeOwner from "../views/owner/HomeView.vue";
+import EventOwnerView from "../views/owner/EventView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -64,6 +69,23 @@ const router = createRouter({
       path: "/create/event",
       name: "createEvent",
       component: CreateEvent,
+    },
+    {
+      path: "/organizer-signup",
+      name: "singupOrganizer",
+      component: SignUpOrganizer,
+    },
+
+    //OWNER
+    {
+      path: "/dashboard-owner",
+      name: "dashboardOwner",
+      component: HomeOwner,
+    },
+    {
+      path: "/event-owner",
+      name: "eventsOwner",
+      component: EventOwnerView,
     },
   ],
 });
