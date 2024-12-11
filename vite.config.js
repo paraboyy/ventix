@@ -34,6 +34,36 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api3/, ""),
       },
+      "/get-event": {
+        target: "https://intero-gateway-production.up.railway.app/participant",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api3/, ""),
+      },
+      "/get": {
+        target: "http://interoperabilitas-production.up.railway.app/api/v1/cms",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api3/, ""),
+      },
+      "/talents": {
+        target: "https://intero.nibdo.dev/api/v1/cms",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api3/, ""),
+      },
+      "/participant/get-checkout-event": {
+        target: "https://intero-gateway-production.up.railway.app",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api-token/, ""),
+      },
+      "/participant/get-event": {
+        target: "https://intero-gateway-production.up.railway.app",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api-token/, ""),
+      },
+      "/user": {
+        target: "https://intero-gateway-production.up.railway.app",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api-token/, ""),
+      },
     },
   },
 });

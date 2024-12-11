@@ -24,9 +24,9 @@
           href="/event-owner"
           :class="{
             'nav-link': true,
-            'text-light': currentPath === '/events-owner',
-            'bg-warning': currentPath === '/events-owner',
-            'text-dark': currentPath !== '/events-owner',
+            'text-light': currentPath === '/event-owner',
+            'bg-warning': currentPath === '/event-owner',
+            'text-dark': currentPath !== '/event-owner',
           }"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-ticket-detailed" viewBox="0 0 16 16">
@@ -44,7 +44,7 @@
           :class="{
             'nav-link': true,
             'text-light': currentPath === '/order-owner',
-            'bg-warning': currentPath === 'order-owner',
+            'bg-warning': currentPath === '/order-owner',
             'text-dark': currentPath !== '/order-owner',
           }"
         >

@@ -17,6 +17,8 @@ import SignUpOrganizer from "../views/organizer/SignUpView.vue";
 //OWNER
 import HomeOwner from "../views/owner/HomeView.vue";
 import EventOwnerView from "../views/owner/EventView.vue";
+import OrderOwnerView from "../views/owner/OrderView.vue";
+import OrganizerView from "../views/owner/OrganizerView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -86,6 +88,16 @@ const router = createRouter({
       path: "/event-owner",
       name: "eventsOwner",
       component: EventOwnerView,
+    },
+    {
+      path: "/order-owner",
+      name: "orderOwner",
+      component: OrderOwnerView,
+    },
+    {
+      path: "/organizer",
+      name: "organizer",
+      component: OrganizerView,
     },
   ],
 });
