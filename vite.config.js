@@ -64,6 +64,12 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api-token/, ""),
       },
+      "/create": {
+        // target: "https://api-payments-485701353107.us-central1.run.app/api/v1/cms",
+        target: "http://localhost:8080/api/v1/cms",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api-token/, ""),
+      },
     },
   },
 });

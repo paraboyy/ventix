@@ -9,18 +9,26 @@
         <button class="btn btn-pilih mx-4">
           <router-link class="decoration-none text-light" to="/create/event">+ Create Event</router-link>
         </button>
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center position-relative">
           <img src="https://via.placeholder.com/40" class="rounded-circle mx-2" alt="Profile Picture" />
-          <a href="#" class="text-light decoration-none" @click="toggleDropdown">{{ userName || "Username" }}</a>
+          <a 
+            href="#"
+            class="text-light decoration-none"
+            @click.prevent="toggleDropdown"
+          >
+            {{ userName || "Username" }}
+          </a>
 
           <!-- Dropdown menu untuk logout -->
-          <ul v-if="dropdownVisible" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <ul 
+            :class="['dropdown-menu', { show: dropdownVisible }]"
+            style="position: absolute; top: 100%; right: 0; z-index: 1000;"
+          >
             <li>
               <a class="dropdown-item" href="#" @click="handleLogout">Logout</a>
             </li>
           </ul>
         </div>
-        <!-- <a href="" class="text-light decoration-none">User Icon</a> -->
       </div>
     </div>
   </nav>
@@ -57,5 +65,35 @@ export default {
       });
     },
   },
+  mounted() {
+    // Menutup dropdown jika pengguna mengklik di luar elemen dropdown
+    document.addEventListener("click", this.handleClickOutside);
+  },
+  beforeDestroy() {
+    // Membersihkan event listener saat komponen dihancurkan
+    document.removeEventListener("click", this.handleClickOutside);
+  },
+  methods: {
+    toggleDropdown() {
+      this.dropdownVisible = !this.dropdownVisible;
+    },
+    handleClickOutside(event) {
+      const dropdown = this.$el.querySelector(".dropdown-menu");
+      if (dropdown && !dropdown.contains(event.target)) {
+        this.dropdownVisible = false;
+      }
+    },
+    handleLogout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("username");
+      this.$router.push("/");
+      Swal.fire({
+        icon: "success",
+        title: "Logout Successful",
+        text: "You have been logged out.",
+      });
+    },
+  },
 };
 </script>
+

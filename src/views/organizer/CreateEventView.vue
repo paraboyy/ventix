@@ -1,16 +1,71 @@
 <script setup>
+import { ref } from "vue";
 import Navbar from "../../components/Navbar/createEvent.vue";
+import axios from "axios";
 
-function toggleFields() {
-  const paidFields = document.getElementById("paidFields");
-  const isFree = document.getElementById("free").checked;
-  if (isFree) {
-    paidFields.style.display = "none";
-  } else {
-    paidFields.style.display = "block";
+const isFree = ref(true);
+const eventForm = ref({
+  title: "",
+  date: "",
+  about: "",
+  tagline: "tagline",
+  keyPoint: [""],
+  venueName: "",
+  statusEvent: "Published",
+  tickets: [{ type: "P0", price: 0, stock: 0, statusTicketCategories: true }],
+  image: "",
+  imageLink: "",
+  category: "66e65cf06571b9abb1a46d00",
+  organizer: localStorage.getItem("id"), // Ambil organizer ID dari localStorage
+  talent: "66ead648c2634fdbd1ef077b",
+});
+
+const toggleFields = () => {
+  isFree.value = !isFree.value;
+};
+
+const uploadImage = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const response = await axios.post("/images", formData);
+    const { _id, url } = response.data.data;
+
+    eventForm.value.image = _id;
+    eventForm.value.imageLink = url;
+    console.log("Image uploaded successfully:", _id, url);
+  } catch (error) {
+    console.error("Failed to upload image:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Upload Failed",
+      text: "Failed to upload the image. Please try again.",
+    });
   }
-}
-document.addEventListener("DOMContentLoaded", toggleFields);
+};
+
+const createEvent = async () => {
+  try {
+    const response = await axios.post("/events", eventForm.value);
+    console.log("Event created successfully:", response.data);
+    Swal.fire({
+      icon: "success",
+      title: "Event Created",
+      text: "Your event has been successfully created!",
+    }).then(() => {
+      window.location.href = "/dashboard-organizer";
+    });
+  } catch (error) {
+    console.error("Failed to create event:", error);
+    console.error("Failed to create event:", error.response?.data || error.message);
+    Swal.fire({
+      icon: "error",
+      title: "Creation Failed",
+      text: error.response?.data?.message || "Failed to create the event. Please try again.",
+    });
+  }
+};
 </script>
 
 <template>
@@ -52,98 +107,48 @@ document.addEventListener("DOMContentLoaded", toggleFields);
       <!-- Main Content -->
       <div class="col-md-7 p-4">
         <h3>Create an Event</h3>
+
+        <!-- Upload Cover -->
         <div class="card mb-4 shadow-lg border-none">
           <div class="card-header">
             <h5>Upload Cover</h5>
-            <p class="text-muted">Upload the event cover to capture your audience's attention</p>
           </div>
           <div class="card-body">
-            <img src="https://via.placeholder.com/1000x400" alt="Event Cover" class="img-fluid mb-3" />
-            <div>
-              <button class="btn btn-danger btn-sm">Remove</button>
-              <button class="btn btn-secondary btn-sm">Change</button>
-            </div>
+            <input type="file" class="form-control mb-3" @change="(e) => uploadImage(e.target.files[0])" />
+            <img :src="eventForm.imageLink" alt="Event Cover" class="img-fluid" v-if="eventForm.imageLink" />
           </div>
         </div>
 
+        <!-- General Information -->
         <div class="card mb-4 shadow-lg border-none">
           <div class="card-header">
             <h5>General Information</h5>
           </div>
           <div class="card-body">
             <div class="mb-3">
-              <label for="eventName" class="form-label">Name <span class="text-danger">*</span></label>
-              <input type="text" id="eventName" class="form-control" placeholder="Make it catchy and memorable" />
+              <label for="eventName" class="form-label">Event Name</label>
+              <input type="text" id="eventName" class="form-control" v-model="eventForm.title" placeholder="Make it catchy and memorable" />
             </div>
             <div class="mb-3">
               <label for="eventDescription" class="form-label">Description</label>
-              <textarea id="eventDescription" class="form-control" rows="3" placeholder="Provide essential event details"></textarea>
+              <textarea id="eventDescription" class="form-control" v-model="eventForm.about" rows="3" placeholder="Provide essential event details"></textarea>
             </div>
             <div class="mb-3">
-              <label for="eventCategory" class="form-label">Category</label>
-              <select id="eventCategory" class="form-select">
-                <option selected>Choose the category for your event</option>
-                <option value="1">Music</option>
-                <option value="2">Art</option>
-                <option value="3">Sports</option>
-              </select>
+              <label for="eventDate" class="form-label">Date</label>
+              <input type="date" id="eventDate" class="form-control" v-model="eventForm.date" />
             </div>
+            <div class="mb-3">
+              <label for="venueName" class="form-label">Venue Name</label>
+              <input type="text" id="venueName" class="form-control" v-model="eventForm.venueName" placeholder="Enter venue name" />
+            </div>
+            <!-- <div class="mb-3">
+              <label for="eventCategory" class="form-label">Category</label>
+              <input type="text" id="eventCategory" class="form-control" v-model="eventForm.category" placeholder="Enter category ID" />
+            </div> -->
           </div>
         </div>
 
-        <div class="card mb-4 shadow-lg border-none">
-          <div class="card-header mb-4">
-            <h5 class="fw-bold">Location and Time</h5>
-          </div>
-          <div class="card-body">
-            <form>
-              <div class="mb-3">
-                <label for="address" class="form-label">Address</label>
-                <input type="text" class="form-control" id="address" placeholder="Enter address" />
-              </div>
-              <div class="row mb-3">
-                <div class="col-md-6">
-                  <label for="city" class="form-label">City</label>
-                  <input type="text" class="form-control" id="city" placeholder="Enter city" />
-                </div>
-                <div class="col-md-6">
-                  <label for="state" class="form-label">State / Province</label>
-                  <select class="form-select" id="state">
-                    <option selected>Select state</option>
-                    <option value="1">State 1</option>
-                    <option value="2">State 2</option>
-                    <option value="3">State 3</option>
-                  </select>
-                </div>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Map</label>
-                <div class="border rounded" style="height: 200px; background-color: #f8f9fa">
-                  <!-- Placeholder for map -->
-                  <p class="text-center pt-5">Map goes here</p>
-                </div>
-              </div>
-              <div class="row mb-3">
-                <div class="col-md-12">
-                  <label for="eventDate" class="form-label">Event Date</label>
-                  <input type="date" class="form-control" id="eventDate" value="2024-12-08" />
-                </div>
-              </div>
-              <div class="row mb-3">
-                <div class="col-md-6">
-                  <label for="startTime" class="form-label">Start Time</label>
-                  <input type="time" class="form-control" id="startTime" value="06:00" />
-                </div>
-                <div class="col-md-6">
-                  <label for="endTime" class="form-label">End Time</label>
-                  <input type="time" class="form-control" id="endTime" value="11:00" />
-                </div>
-              </div>
-              <!-- <button type="button" class="btn btn-pilih">Add agenda</button> -->
-            </form>
-          </div>
-        </div>
-
+        <!-- Ticket Information -->
         <div class="card mb-4 shadow-lg border-none">
           <div class="card-header mb-4">
             <h5 class="fw-bold">Ticket</h5>
@@ -153,59 +158,36 @@ document.addEventListener("DOMContentLoaded", toggleFields);
               <div class="row mb-3">
                 <div class="col-md-6">
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="ticketType" id="paid" checked onchange="toggleFields()" />
+                    <input class="form-check-input" type="radio" name="ticketType" id="paid" :checked="!isFree" @change="toggleFields" />
                     <label class="form-check-label" for="paid">Paid</label>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="ticketType" id="free" onchange="toggleFields()" />
+                    <input class="form-check-input" type="radio" name="ticketType" id="free" :checked="isFree" @change="toggleFields" />
                     <label class="form-check-label" for="free">Free</label>
                   </div>
                 </div>
               </div>
-              <div id="paidFields">
+              <div v-if="!isFree">
                 <div class="row mb-3">
                   <div class="col-md-6">
                     <label for="quantity" class="form-label">Quantity</label>
-                    <input type="number" class="form-control" id="quantity" placeholder="Enter quantity" value="200" />
+                    <input type="number" class="form-control" id="quantity" placeholder="Enter quantity" v-model="eventForm.tickets[0].stock" />
                   </div>
                   <div class="col-md-6">
                     <label for="price" class="form-label">Price $</label>
-                    <input type="number" class="form-control" id="price" placeholder="Enter price" value="90" />
+                    <input type="number" class="form-control" id="price" placeholder="Enter price" v-model="eventForm.tickets[0].price" />
                   </div>
-                </div>
-              </div>
-              <h4 class="mb-3">Sale date</h4>
-              <div class="row mb-3">
-                <div class="col-md-6">
-                  <label for="startDate" class="form-label">Start Date</label>
-                  <input type="date" class="form-control" id="startDate" value="2023-01-15" />
-                </div>
-                <div class="col-md-6">
-                  <label for="startTime" class="form-label">Start Time</label>
-                  <input type="time" class="form-control" id="startTime" value="06:00" />
-                </div>
-              </div>
-              <div class="row mb-3">
-                <div class="col-md-6">
-                  <label for="endDate" class="form-label">End Date</label>
-                  <input type="date" class="form-control" id="endDate" value="2023-02-10" />
-                </div>
-                <div class="col-md-6">
-                  <label for="endTime" class="form-label">End Time</label>
-                  <input type="time" class="form-control" id="endTime" value="20:00" />
                 </div>
               </div>
             </form>
           </div>
         </div>
+
         <div class="d-flex justify-content-between">
           <button type="button" class="btn btn-danger">Cancel</button>
-          <div>
-            <button type="button" class="btn btn-light me-2">Save draft</button>
-            <button type="button" class="btn btn-pilih">Next →</button>
-          </div>
+          <button type="button" class="btn btn-pilih" @click="createEvent">Create Event</button>
         </div>
       </div>
     </div>

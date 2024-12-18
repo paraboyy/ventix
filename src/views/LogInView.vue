@@ -79,6 +79,7 @@ export default {
         const decodedToken = jwtDecode(access_token);
         const userRole = decodedToken.role;
 
+        localStorage.setItem("id", decodedToken.id);
         localStorage.setItem("username", decodedToken.sub);
 
         // Menampilkan SweetAlert berdasarkan hasil login

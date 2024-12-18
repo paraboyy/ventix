@@ -1,5 +1,5 @@
 <template>
-  <div class="col-md-2 bg-light text-dark vh-100 p-3 shadow-lg">
+  <div class="col-md-2 bg-light text-dark vh-100 p-3 shadow-lg d-flex flex-column justify-content-between">
     <ul class="nav flex-column mt-4">
       <li class="nav-item mb-2 btn-hover">
         <a
@@ -39,6 +39,15 @@
         </a>
       </li>
     </ul>
+
+    <button class="btn btn-danger mt-4" @click="handleLogout">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right me-2" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M6 3a1 1 0 0 1 1-1h4a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7a1 1 0 0 1-1-1V3zm1-1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4a3 3 0 0 0 3-3V4a3 3 0 0 0-3-3H7z"/>
+        <path fill-rule="evenodd" d="M11.354 8.354a.5.5 0 0 0 0-.708L9.172 5.464a.5.5 0 1 0-.708.708L10.293 8l-1.829 1.828a.5.5 0 1 0 .708.708l2.182-2.182z"/>
+        <path fill-rule="evenodd" d="M4.5 8a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5z"/>
+      </svg>
+      Logout
+    </button>
   </div>
 </template>
 
@@ -48,6 +57,23 @@ export default {
     return {
       currentPath: window.location.pathname,
     };
+  },
+  methods: {
+    handleLogout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("username");
+      localStorage.removeItem("id");
+
+      // Arahkan pengguna ke halaman login
+      this.$router.push("/");
+
+      // Menampilkan SweetAlert untuk konfirmasi logout
+      Swal.fire({
+        icon: "success",
+        title: "Logout Successful",
+        text: "You have been logged out.",
+      });
+    },
   },
 };
 </script>

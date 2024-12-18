@@ -7,6 +7,8 @@ import CreateEventView from "../views/CreateEventView.vue";
 //PARTICIPAN
 import HomeParticipan from "../views/participan/HomeView.vue";
 import EventsView from "../views/participan/EventsView.vue";
+import OrderView from "../views/participan/OrdersView.vue";
+import MyEvents from "../views/participan/MyEvent.vue";
 
 //ORGANIZER
 import HomeOrganizer from "../views/organizer/HomeView.vue";
@@ -54,6 +56,17 @@ const router = createRouter({
       path: "/event",
       name: "events",
       component: EventsView,
+    },
+    {
+      path: "/dashboard",
+      name: "myEvent",
+      component: MyEvents,
+    },
+    {
+      path: "/order/:eventId",
+      name: "orders",
+      component: OrderView,
+      props: true,
     },
 
     //ORGANIZER
